@@ -1,9 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using cw3.DAL;
 using cw3.Models;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace cw3.Controllers
@@ -12,12 +9,18 @@ namespace cw3.Controllers
     [ApiController]
     public class StudentsController : ControllerBase
     {
+        private readonly IDbService _dbService;
+        
+        public StudentsController(IDbService dbService)
+        {
+            dbService = _dbService;
+        }
         // GET: api/Students
         [HttpGet]
-
-        public string GetStudent(string orderBy)
+        public IActionResult GetStudent(string orderBy)
         {
-            return $"Kowalski, Malewski, Andrzejewski sortowanie={orderBy}";
+            return Ok(_dbService.GetStudents());
+           // return $"Kowalski, Malewski, Andrzejewski sortowanie={orderBy}";
         }
         /*
         public IEnumerable<string> Get()
