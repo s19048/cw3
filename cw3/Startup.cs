@@ -1,4 +1,5 @@
 ﻿using cw3.DAL;
+using cw3.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -18,7 +19,8 @@ namespace Cw3
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddSingleton<IDbService, MockDbService>();
-            services.AddControllers();
+            services.AddScoped<IStudentsDbService, SqlServerDbService>();
+            services.AddControllersWithViews();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -27,17 +29,15 @@ namespace Cw3
             {
                 app.UseDeveloperExceptionPage();
             }
-
-            app.UseHttpsRedirection();
-
-            app.UseRouting();
-
-            app.UseAuthorization();
-
-            app.UseEndpoints(endpoints =>
+            else
             {
-                endpoints.MapControllers();
-            });
+                app.UseExceptionHandler("/Home/Error");
+                app.UseHsts();
+            }
+            app.UseHttpsRedirection();
+            app.UseStaticFiles();
+            app.UseAuthentication();
+            app.UseRouting();
         }
     }
 }

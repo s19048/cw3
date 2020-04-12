@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 using cw3.Models;
 
 namespace cw3.DAL
@@ -13,9 +10,9 @@ namespace cw3.DAL
         {
             _students = new List<Student>
             {
-                new Student{IdStudent=1,FirstName="Jan", LastName="Kowalski"},
-                new Student{IdStudent=2,FirstName="Anna", LastName="Malewski"},
-                new Student{IdStudent=3,FirstName="Andrzej", LastName="Andrzejewicz"}
+                new Student{IndexNumber="11", FirstName="Michal", LastName="Malarski"},
+                new Student{IndexNumber="22", FirstName="Magda", LastName="Gessler"},
+                new Student{IndexNumber="33", FirstName="Krzysztof", LastName="Ibisz"}
             };
 
         }
