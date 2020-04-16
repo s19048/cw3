@@ -103,30 +103,7 @@ namespace cw3.Controllers
                 return NotFound();
             }
         }
-        /* public IActionResult GetStudent(string orderBy)
-         {
-             return Ok(_dbService.GetStudents());
-            // return $"Kowalski, Malewski, Andrzejewski sortowanie={orderBy}";
-         }
-
-         public IEnumerable<string> Get()
-         {
-             return new string[] { "value1", "value2" };
-         }
-         */
-
-        // GET: api/Students/5
-        /*[HttpGet("{id}")]
-        public IActionResult GetStudent(int id)
-        {
-            if (id == 1)
-                return Ok("Kowalski");
-            else if (id == 2)
-                return Ok("Malewski");
-            else
-                return NotFound("Nie znaleziono studenta");
-        }
-        */
+        
         // POST: api/Students
         [HttpPost]
         public IActionResult CreateStudent(Student student )
