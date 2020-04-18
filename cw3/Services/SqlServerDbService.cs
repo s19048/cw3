@@ -3,6 +3,7 @@ using System.Data.SqlClient;
 using cw3.DTOs.Requests;
 using cw3.DTOs.Responses;
 using cw3.Controllers;
+using cw3.Models;
 
 namespace cw3.Services
 {
@@ -110,6 +111,11 @@ namespace cw3.Services
             };
 
             return response;
+        }
+
+        public Student GetStudent(string IndexNumber)
+        {
+            throw new NotImplementedException();
         }
 
         public Enrollment PromoteStudents(int semester, string studiesName)

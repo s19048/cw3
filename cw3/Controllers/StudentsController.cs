@@ -11,10 +11,11 @@ namespace cw3.Controllers
     [ApiController]
     public class StudentsController : ControllerBase
     {
-        private readonly IDbService _dbService;
+        public IDbService DbService { get; }
+
         public StudentsController(IDbService dbService)
         {
-            dbService = _dbService;
+            dbService = DbService;
         }
         // GET: api/Students
         [HttpGet]

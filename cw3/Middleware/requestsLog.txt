@@ -1,0 +1,7 @@
+﻿Metoda: GET ścieżka: /api/students/2
+body:
+{
+    "semester": 0,
+    "studies": null
+}
+ queryString: ?firstName=Malarski
