@@ -1,4 +1,4 @@
-﻿Metoda: GET ścieżka: /api/students/2
+﻿Metoda: GET ścieżka: /api/students/1
 body:
 {
     "semester": 0,

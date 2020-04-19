@@ -9,8 +9,7 @@ namespace cw3.Services
     {
         EnrollStudentResponse EnrollStudent(EnrollStudentRequest enrollStudentRequest);
         Enrollment PromoteStudents(int semester, string studies);
-
         Student GetStudent(string IndexNumber);
-        object GetStudent();
+       
     }
 }

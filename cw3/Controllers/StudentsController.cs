@@ -49,7 +49,7 @@ namespace cw3.Controllers
             return Ok(listOfStudents);
         }
         [HttpGet("{IndexNumber}")]
-        public IActionResult getStudent(string IndexNumber)
+        public IActionResult GetStudent(string IndexNumber)
         {
             int id = int.Parse(IndexNumber);
             using (SqlConnection client = new SqlConnection("Data Source=db-mssql16.pjwstk.edu.pl; Initial Catalog=s19048; User ID=apbds19048; Password=admin"))
@@ -77,7 +77,7 @@ namespace cw3.Controllers
         }
     }
         [HttpGet("{IndexNumber}/{Semester}")]
-        public IActionResult getSemester(string indexNumber, int semester)
+        public IActionResult GetSemester(string indexNumber, int semester)
         {
             int id = int.Parse(indexNumber);
             using (SqlConnection con = new SqlConnection("Data Source=db-mssql16.pjwstk.edu.pl; Initial Catalog=s19048; User ID=apbds19048; Password=admin"))

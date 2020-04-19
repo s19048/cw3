@@ -21,11 +21,6 @@ namespace cw3.Controllers
             return StatusCode(201, _service.EnrollStudent(request));
         }
 
-        private IActionResult Ok(object p)
-        {
-            throw new NotImplementedException();
-        }
-
         [HttpPost("{promotions}")]
         public IActionResult PromoteStudent(PromoteStudentRequest request)
         {
