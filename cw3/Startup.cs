@@ -1,11 +1,14 @@
 ﻿using cw3.Middleware;
 using cw3.Services;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
 namespace Cw3
 {
@@ -18,6 +21,20 @@ namespace Cw3
 
         public IConfiguration Configuration { get; }
         public void ConfigureServices(IServiceCollection services) {
+            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+                   .AddJwtBearer(options =>
+                   {
+                       options.TokenValidationParameters = new TokenValidationParameters
+                       {
+                           ValidateIssuer = true,
+                           ValidateAudience = true,
+                           ValidateLifetime = true,
+                           ValidIssuer = "Gakko",
+                           ValidAudience = "Students",
+                           IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["SecretKey"]))
+                       };
+                   });
+            services.AddScoped<ILoginService, LoginService>();
             services.AddScoped<IStudentsDbService, SqlServerDbService>();
             services.AddControllers();
             services.AddSwaggerGen(config =>
@@ -29,6 +46,8 @@ namespace Cw3
                     Version = "v1"
                 });
             });
+            services.AddControllers()
+                    .AddXmlSerializerFormatters();
         }
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IStudentsDbService service)
         {
@@ -63,11 +82,9 @@ namespace Cw3
                 await next();
             });
             app.UseHttpsRedirection();
-
             app.UseRouting();
-
+            app.UseAuthentication(); //--
             app.UseAuthorization();
-            
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();

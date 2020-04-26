@@ -4,6 +4,10 @@ using cw3.Models;
 using Microsoft.AspNetCore.Mvc;
 using System.Data.SqlClient;
 using System.Collections.Generic;
+using Microsoft.Extensions.Configuration;
+using cw3.Services;
+using Microsoft.AspNetCore.Authorization;
+using cw3.DTOs.Requests;
 
 namespace cw3.Controllers
 {
@@ -11,13 +15,18 @@ namespace cw3.Controllers
     [ApiController]
     public class StudentsController : ControllerBase
     {
-        public IDbService DbService { get; }
+        private readonly IDbService DbService;
+        private readonly IConfiguration Configuration;
+        private readonly ILoginService LoginService;
 
-        public StudentsController(IDbService dbService)
+        public StudentsController(IDbService dbService, IConfiguration configuration, LoginService loginService)
         {
-            dbService = DbService;
+            DbService = dbService;
+            Configuration = configuration;
+            LoginService = loginService;
         }
         // GET: api/Students
+        [Authorize]
         [HttpGet]
         public IActionResult GetStudents([FromServices]IDbService dbService)
         {
@@ -112,7 +121,7 @@ namespace cw3.Controllers
             student.IndexNumber = $"s{new Random().Next(1, 20000)}";
             return Ok(student);
         }
-        // PUT: api/Students/5 -- zamiana na indexNumber
+        // PUT: api/Students/5 
         [HttpPut("{IndexNumber}")]
         public IActionResult PutStudent(int IndexNumber)
         {
@@ -122,7 +131,7 @@ namespace cw3.Controllers
             }
             return NotFound("Nie znaleziono studenta o podanym id");
         }
-        // DELETE: api/ApiWithActions/5 -- zamiana na indexNumber
+        // DELETE: api/ApiWithActions/5
         [HttpDelete("{IndexNumber}")]
         public IActionResult RemoveStudent(int IndexNumber)
         {
@@ -131,6 +140,19 @@ namespace cw3.Controllers
                 return Ok("Usuwanie ukończone");
             }
             return NotFound("Nie znaleziono studenta o danym IndexNumber");
+        }
+        [Authorize]
+        [HttpPost("login")]
+        public IActionResult Login(LoginRequestDto requestDto)
+        {
+            return Ok(LoginService.Login(requestDto));
+        }
+
+        [Authorize(Roles = "Employee")]
+        [HttpPost("refresh-token/{rToken}")]
+        public IActionResult RefreshToken(string rToken)
+        {
+            return Ok(LoginService.RefreshToken(rToken));
         }
     }
 }

@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using cw3.DTOs.Requests;
 using cw3.Services;
-using System;
+using Microsoft.AspNetCore.Authorization;
 
 namespace cw3.Controllers
 {
@@ -14,13 +14,14 @@ namespace cw3.Controllers
             _service = service;
         }
 
-
+        [Authorize(Roles = "employee")]
         [HttpPost]
         public IActionResult EnrollStudent(EnrollStudentRequest request)
         {
             return StatusCode(201, _service.EnrollStudent(request));
         }
 
+        [Authorize(Roles = "employee")]
         [HttpPost("{promotions}")]
         public IActionResult PromoteStudent(PromoteStudentRequest request)
         {
