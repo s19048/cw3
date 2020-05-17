@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using cw3.Services;
+using Microsoft.AspNetCore.Http;
 using System;
 using System.IO;
 using System.Text;
@@ -15,7 +16,7 @@ namespace cw3.Middleware
             _next = next;
         }
 
-        public async Task InvokeAsync(HttpContext httpContext)
+        public async Task InvokeAsync(HttpContext httpContext,IStudentsDbService service)
         {
             var path = @"Middleware/requestsLog.txt";
             httpContext.Request.EnableBuffering();

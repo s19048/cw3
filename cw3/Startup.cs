@@ -1,9 +1,11 @@
 ﻿using cw3.Middleware;
+using cw3.PartialModels;
 using cw3.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -21,19 +23,10 @@ namespace Cw3
 
         public IConfiguration Configuration { get; }
         public void ConfigureServices(IServiceCollection services) {
-            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-                   .AddJwtBearer(options =>
-                   {
-                       options.TokenValidationParameters = new TokenValidationParameters
-                       {
-                           ValidateIssuer = true,
-                           ValidateAudience = true,
-                           ValidateLifetime = true,
-                           ValidIssuer = "Gakko",
-                           ValidAudience = "Students",
-                           IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["SecretKey"]))
-                       };
-                   });
+            services.AddDbContext<s19048Context>(options =>
+            {
+                options.UseSqlServer("Data Source=db-mssql16.pjwstk.edu.pl; Initial Catalog=s19048;User ID=apbds19048;Password=admin");
+            });
             services.AddScoped<ILoginService, LoginService>();
             services.AddScoped<IStudentsDbService, SqlServerDbService>();
             services.AddControllers();
@@ -73,7 +66,7 @@ namespace Cw3
                 }
                 var index = context.Request.Headers["Index"].ToString();
 
-                DbService dbService = new DbService();
+                IStudentsDbService dbService = new SqlServerDbService();
                 if (!dbService.CheckIndex(index))
                 {
                     await context.Response.WriteAsync("Nie ma takiego studenta w bazie");

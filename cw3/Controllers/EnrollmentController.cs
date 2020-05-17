@@ -14,15 +14,13 @@ namespace cw3.Controllers
             _service = service;
         }
 
-        [Authorize(Roles = "employee")]
         [HttpPost]
         public IActionResult EnrollStudent(EnrollStudentRequest request)
         {
             return StatusCode(201, _service.EnrollStudent(request));
         }
 
-        [Authorize(Roles = "employee")]
-        [HttpPost("{promotions}")]
+        [HttpPost("promotions")]
         public IActionResult PromoteStudent(PromoteStudentRequest request)
         {
             return StatusCode(201, _service.PromoteStudents(request.Semester, request.Studies));

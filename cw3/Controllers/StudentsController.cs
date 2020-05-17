@@ -1,6 +1,6 @@
 ﻿using System;
 using cw3.DAL;
-using cw3.Models;
+using cw3.PartialModels;
 using Microsoft.AspNetCore.Mvc;
 using System.Data.SqlClient;
 using System.Collections.Generic;
@@ -15,22 +15,26 @@ namespace cw3.Controllers
     [ApiController]
     public class StudentsController : ControllerBase
     {
-        private readonly IDbService DbService;
-        private readonly IConfiguration Configuration;
-        private readonly ILoginService LoginService;
+        private readonly IDbService _dbService;
+        private readonly IConfiguration _configuration;
+        private readonly ILoginService _loginService;
+        private readonly IStudentsDbService _studentsDbService;
+        private readonly s19048Context _s19048Context;
 
-        public StudentsController(IDbService dbService, IConfiguration configuration, LoginService loginService)
+        public StudentsController(IDbService dbService, IConfiguration configuration, LoginService loginService, IStudentsDbService studentsDbService,s19048Context s19048Context)
         {
-            DbService = dbService;
-            Configuration = configuration;
-            LoginService = loginService;
+            _dbService = dbService;
+            _configuration = configuration;
+            _loginService = loginService;
+            _studentsDbService = studentsDbService;
+            _s19048Context = s19048Context;
         }
         // GET: api/Students
         [Authorize]
         [HttpGet]
         public IActionResult GetStudents([FromServices]IDbService dbService)
         {
-            var listOfStudents = new List<Student>();
+            var listOfStudents = new List<Models.Student>();
             using (SqlConnection client = new SqlConnection("Data Source=db-mssql16.pjwstk.edu.pl; Initial Catalog=s19048; User ID=apbds19048; Password=admin"))
             {
                 using (SqlCommand command = new SqlCommand())
@@ -43,7 +47,7 @@ namespace cw3.Controllers
                     SqlDataReader SqlDataReader = command.ExecuteReader();
                     while (SqlDataReader.Read())
                     {
-                        var student = new Student();
+                        var student = new Models.Student();
                         student.IndexNumber = SqlDataReader["IndexNumber"].ToString();
                         student.FirstName = SqlDataReader["FirstName"].ToString();
                         student.LastName = SqlDataReader["LastName"].ToString();
@@ -74,7 +78,7 @@ namespace cw3.Controllers
             SqlDataReader SqlDataReader = command.ExecuteReader();
             if (SqlDataReader.Read())
             {
-                var student = new Student();
+                var student = new Models.Student();
                 student.IndexNumber = SqlDataReader["IndexNumber"].ToString();
                 student.FirstName = SqlDataReader["FirstName"].ToString();
                 student.LastName = SqlDataReader["LastName"].ToString();
@@ -113,10 +117,16 @@ namespace cw3.Controllers
                 return NotFound();
             }
         }
-        
+
+        [HttpGet]
+        public IActionResult GetStudents()
+        {
+            return Ok(_studentsDbService.GetStudents());
+        }
+
         // POST: api/Students
         [HttpPost]
-        public IActionResult CreateStudent(Student student )
+        public IActionResult CreateStudent(Models.Student student )
         {
             student.IndexNumber = $"s{new Random().Next(1, 20000)}";
             return Ok(student);
@@ -145,14 +155,14 @@ namespace cw3.Controllers
         [HttpPost("login")]
         public IActionResult Login(LoginRequestDto requestDto)
         {
-            return Ok(LoginService.Login(requestDto));
+            return Ok(_loginService.Login(requestDto));
         }
 
         [Authorize(Roles = "Employee")]
         [HttpPost("refresh-token/{rToken}")]
         public IActionResult RefreshToken(string rToken)
         {
-            return Ok(LoginService.RefreshToken(rToken));
+            return Ok(_loginService.RefreshToken(rToken));
         }
     }
 }
